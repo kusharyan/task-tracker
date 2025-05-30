@@ -9,7 +9,7 @@ import { TasksService } from '../../services/tasks.service';
   styleUrl: './add-tasks.component.css'
 })
 export class AddTasksComponent {
-   taskName = '';
+  taskName = '';
   taskDescription = '';
 
   constructor(private taskService: TasksService) {}
