@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';import { AddTasksComponent } from './components/add-tasks/add-tasks.component';
+import { Component } from '@angular/core';
+import { AddTasksComponent } from './components/add-tasks/add-tasks.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 
 @Component({
   selector: 'app-root',
-  imports: [AddTasksComponent,TaskListComponent],
+  imports: [AddTasksComponent, TaskListComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

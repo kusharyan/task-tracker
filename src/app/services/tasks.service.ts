@@ -5,7 +5,8 @@ import { Task } from '../Model/task.model';
 @Injectable({
   providedIn: 'root'
 })
-export class TasksService {private tasks = new BehaviorSubject<Task[]>([]);
+export class TasksService {
+  private tasks = new BehaviorSubject<Task[]>([]);
   tasks$ = this.tasks.asObservable();
 
   private currentId = 0;
