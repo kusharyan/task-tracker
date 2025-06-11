@@ -3,6 +3,7 @@ import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../task-model/task.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { retry } from 'rxjs';
 
 @Component({
   selector: 'app-task-item',
@@ -27,6 +28,7 @@ export class TaskItemComponent {
   }
 
   startEdit() {
+    if(this.task.completed) return;
     this.editing = true;
     this.editedName = this.task.name;
     this.editedDesc = this.task.description;

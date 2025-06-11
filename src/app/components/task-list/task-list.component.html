@@ -1,7 +1,7 @@
 <div class="mb-3">
-  <button class="btn btn-outline-primary me-2" (click)="setFilter('all')">All</button>
-  <button class="btn btn-outline-success me-2" (click)="setFilter('completed')">Completed</button>
-  <button class="btn btn-outline-warning" (click)="setFilter('pending')">Pending</button>
+  <button class="btn me-2" [ngClass]="{'btn-primary': filter === 'all','btn-outline-primary': filter !== 'all'}"(click)="setFilter('all')">All</button>
+  <button class="btn me-2" [ngClass]="{'btn-success': filter === 'completed','btn-outline-success': filter !== 'completed'}" (click)="setFilter('completed')">Completed</button>
+  <button class="btn" [ngClass]="{'btn-warning': filter === 'pending','btn-outline-warning': filter !== 'pending'}" (click)="setFilter('pending')">Pending</button>
 </div>
 
 <div *ngIf="tasks$ | async as tasks">

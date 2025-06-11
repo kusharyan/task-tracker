@@ -7,7 +7,7 @@
         <p class="mb-0 text-muted">{{ task.description }}</p>
       </div>
       <div>
-        <button class="btn btn-sm btn-secondary me-2" (click)="startEdit()">Edit</button>
+        <button class="btn btn-sm btn-secondary me-2" (click)="startEdit()" [disabled]="task.completed">Edit</button>
         <button class="btn btn-sm btn-danger" (click)="delete()">Delete</button>
       </div>
     </div>
