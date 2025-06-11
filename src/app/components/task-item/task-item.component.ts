@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
-import { Task } from '../../Model/task.model';
+import { Task } from '../../task-model/task.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

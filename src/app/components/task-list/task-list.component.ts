@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
-import { Task } from '../../Model/task.model';
+import { Task } from '../../task-model/task.model';
 import { CommonModule } from '@angular/common';
 import { TaskItemComponent } from '../task-item/task-item.component';
 import { Observable } from 'rxjs/internal/Observable';
