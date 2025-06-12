@@ -15,6 +15,7 @@ export class LayoutComponent {
 
   logout() {
     this.authService.logout();
+    localStorage.removeItem('user');
     this.router.navigate(['/login-form']);
   }
 

@@ -54,6 +54,7 @@ export class TasksService {
       name,
       description,
       completed: false,
+      userMail: this.getLocalUser(),
     };
     this.tasks.next([...this.tasks.value, newTask]);
   }
@@ -63,11 +64,11 @@ export class TasksService {
   }
 
   toggleTask(id: number) {
-    this.tasks.next(
-      this.tasks.value.map((t) =>
-        t.id === id ? { ...t, completed: !t.completed } : t
-      )
-    );
+   this.tasks.next(
+    this.tasks.value.map(task =>
+      task.id === id ? { ...task, completed: true } : task
+    )
+  );
   }
 
   updateTask(id: number, name: string, description: string) {
@@ -86,5 +87,10 @@ export class TasksService {
   private getNextId(): number {
     const tasks = this.loadTasksFromStorage();
     return tasks.length ? Math.max(...tasks.map((t) => t.id)) + 1 : 0;
+  }
+
+  getLocalUser() {
+    const userDets = JSON.parse(localStorage.getItem('user') || '');
+    return userDets.email;
   }
 }
