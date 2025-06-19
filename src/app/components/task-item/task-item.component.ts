@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TaskItemComponent {
   @Input() task!: Task;
-  editing = false;
+  isEditing = false;
   editedName = '';
   editedDesc = '';
 
@@ -30,17 +30,17 @@ export class TaskItemComponent {
 
   startEdit() {
     if (this.task.completed) return;
-    this.editing = true;
+    this.isEditing = true;
     this.editedName = this.task.name;
     this.editedDesc = this.task.description;
   }
 
   saveEdit() {
     this.taskService.updateTask(this.task.id, this.editedName, this.editedDesc);
-    this.editing = false;
+    this.isEditing = false;
   }
 
   cancelEdit() {
-    this.editing = false;
+    this.isEditing = false;
   }
 }

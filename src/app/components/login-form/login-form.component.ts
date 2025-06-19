@@ -13,19 +13,22 @@ import { Subscription } from 'rxjs';
 })
 export class LoginFormComponent implements OnInit, OnDestroy{
 
-  loginForm: FormGroup;
+  loginForm!: FormGroup;
   errorMessage: string = '';
   private loginSubscription!: Subscription;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    // this.loginForm = this.fb.group({
+    //   email: ['', [Validators.email, Validators.required]],
+    //   password: ['', [Validators.required, Validators.minLength(6)]]
+    // })
+  }
+
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.email, Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
-  }
-
-  ngOnInit(): void {
-    
   }
 
   onSubmit() {
@@ -45,6 +48,5 @@ export class LoginFormComponent implements OnInit, OnDestroy{
     if(this.loginSubscription){
     this.loginSubscription.unsubscribe();
     }
-    // alert("Do you want to exit the page?")
   }
 }

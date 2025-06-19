@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
 import { Task } from '../../task-model/task.model';
 import { CommonModule } from '@angular/common';
@@ -12,12 +12,22 @@ import { map } from 'rxjs';
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
 })
-export class TaskListComponent {
-  tasks$: Observable<Task[]>;
-  filteredTasks$: Observable<Task[]>;
+export class TaskListComponent implements OnInit{
+  tasks$!: Observable<Task[]>;
+  filteredTasks$!: Observable<Task[]>;
   currentUserEmail: string | undefined;
 
   constructor(private taskService: TasksService) {
+    // this.tasks$ = this.taskService.tasks$;
+    // this.currentUserEmail = this.taskService.getLocalUser();
+    // this.filteredTasks$ = this.tasks$.pipe(
+    //   map((tasks) =>
+    //     tasks.filter((task) => task.userMail === this.currentUserEmail)
+    //   )
+    // );
+  }
+
+  ngOnInit(): void {
     this.tasks$ = this.taskService.tasks$;
     this.currentUserEmail = this.taskService.getLocalUser();
     this.filteredTasks$ = this.tasks$.pipe(

@@ -65,10 +65,10 @@ export class TasksService {
 
   toggleTask(id: number) {
    this.tasks.next(
-    this.tasks.value.map(task =>
-      task.id === id ? { ...task, completed: true } : task
-    )
-  );
+      this.tasks.value.map(task =>
+        task.id === id ? { ...task, completed: true } : task
+      )
+    );
   }
 
   updateTask(id: number, name: string, description: string) {

@@ -1,0 +1,45 @@
+/* Center the card on the page */
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* full viewport height */
+  background-color: #f8f9fa; /* light background */
+}
+
+/* Style the login card */
+.card {
+  width: 100%;
+  max-width: 400px; /* fixed width for card */
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  border: none;
+}
+
+/* Spacing and typography */
+.card-title {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Inputs */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+input.form-control {
+  border-radius: 6px;
+}
+
+/* Button */
+button[type="submit"] {
+  width: 100%;
+}
+
+/* Error message spacing */
+.text-danger {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}
