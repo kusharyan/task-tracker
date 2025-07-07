@@ -4,9 +4,13 @@
   <button class="btn" [ngClass]="{'btn-warning': filter === 'pending','btn-outline-warning': filter !== 'pending'}" (click)="setFilter('pending')">Pending</button>
 </div>
 
-<div *ngIf="filteredTasks$ | async as tasks">
+<div *ngIf="tasks.length else noTasks">
   <app-task-item
-    *ngFor="let task of filterTasks(tasks)"
-    [task]="task">
-  </app-task-item>
+    *ngFor="let task of getFilteredTasks()"
+    [task]="task"
+  ></app-task-item>
 </div>
+
+<ng-template #noTasks>
+  <p>No tasks available.....</p>
+</ng-template>

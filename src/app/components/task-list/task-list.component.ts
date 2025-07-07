@@ -1,10 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  OnInit,
+} from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
-import { Task } from '../../task-model/task.model';
+import { RTask } from '../../task-model/task.model';
 import { CommonModule } from '@angular/common';
 import { TaskItemComponent } from '../task-item/task-item.component';
-import { Observable } from 'rxjs/internal/Observable';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-task-list',
@@ -13,40 +14,40 @@ import { map } from 'rxjs';
   styleUrl: './task-list.component.css',
 })
 export class TaskListComponent implements OnInit{
-  tasks$!: Observable<Task[]>;
-  filteredTasks$!: Observable<Task[]>;
-  currentUserEmail: string | undefined;
+  tasks: RTask[] = [];
+  // @Input() tasks: RTask[] = [];
+  filter: 'all' | 'completed' | 'pending' = 'all';
 
-  constructor(private taskService: TasksService) {
-    // this.tasks$ = this.taskService.tasks$;
-    // this.currentUserEmail = this.taskService.getLocalUser();
-    // this.filteredTasks$ = this.tasks$.pipe(
-    //   map((tasks) =>
-    //     tasks.filter((task) => task.userMail === this.currentUserEmail)
-    //   )
-    // );
-  }
+  constructor(
+    private taskService: TasksService,
+  ) {}
+
 
   ngOnInit(): void {
-    this.tasks$ = this.taskService.tasks$;
-    this.currentUserEmail = this.taskService.getLocalUser();
-    this.filteredTasks$ = this.tasks$.pipe(
-      map((tasks) =>
-        tasks.filter((task) => task.userMail === this.currentUserEmail)
-      )
-    );
+    this.fetchTasks();
+    this.taskService.fetchRequest$.subscribe(() => {
+    this.fetchTasks();
+  });
   }
 
-  filter: 'all' | 'pending' | 'completed' = 'all';
+  fetchTasks(): void {
+    this.taskService.loadTasks().subscribe((data) => {
+      this.tasks = [...data];
+    });
+  }
 
-  setFilter(value: 'all' | 'pending' | 'completed') {
+  setFilter(value: 'all' | 'completed' | 'pending' = 'all') {
     this.filter = value;
   }
 
-  filterTasks(tasks: Task[]): Task[] {
-    if (this.filter === 'all') return tasks;
-    return tasks.filter((t) =>
-      this.filter === 'completed' ? t.completed : !t.completed
-    );
+  getFilteredTasks() {
+    switch (this.filter) {
+      case 'completed':
+        return this.tasks.filter((task) => task.completed);
+      case 'pending':
+        return this.tasks.filter((task) => !task.completed);
+      default:
+        return this.tasks;
+    }
   }
 }

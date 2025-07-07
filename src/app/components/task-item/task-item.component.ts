@@ -1,8 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { TasksService } from '../../services/tasks.service';
-import { Task } from '../../task-model/task.model';
+import { RTask } from '../../task-model/task.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-task-item',
@@ -11,36 +12,62 @@ import { CommonModule } from '@angular/common';
   styleUrl: './task-item.component.css',
 })
 export class TaskItemComponent {
-  @Input() task!: Task;
+  @Input() task!: RTask;
   isEditing = false;
-  editedName = '';
-  editedDesc = '';
+  editedTaskName = '';
+  editedDescription = '';
+
+  private unsubscribe!: Subscription;
 
   constructor(private taskService: TasksService) {}
 
   toggleComplete() {
-    if (!this.task.completed) {
-      this.taskService.toggleTask(this.task.id);
-    }
+    this.unsubscribe = this.taskService.toggleTask(this.task._id!, !this.task.completed,this.task).subscribe({
+      next: (data)=> {this.taskService.requestFetch()},
+      error: (err)=> console.log(err)
+    });
   }
 
   deleteTsk() {
-    this.taskService.deleteTask(this.task.id);
+    this.unsubscribe = this.taskService.deleteTask(this.task._id!).subscribe({
+      next: (data) => {
+        this.taskService.requestFetch()
+      },
+      error: (err)=> console.log(err)
+    });
   }
 
   startEdit() {
     if (this.task.completed) return;
     this.isEditing = true;
-    this.editedName = this.task.name;
-    this.editedDesc = this.task.description;
+    this.editedTaskName = this.task.name;
+    this.editedDescription = this.task.description;
   }
 
   saveEdit() {
-    this.taskService.updateTask(this.task.id, this.editedName, this.editedDesc);
+    this.unsubscribe = this.taskService.updateTask(this.task._id!, {
+      name: this.editedTaskName,
+      description: this.editedDescription,
+      completed: this.task.completed,
+      userId: this.task.userId,
+      _id: this.task._id,
+    }).subscribe({
+      next: (data) => {
+        this.taskService.requestFetch(),
+        console.log(data)
+      },
+      error: (err) => console.log(err)
+    });
     this.isEditing = false;
   }
 
   cancelEdit() {
     this.isEditing = false;
+  }
+
+  ngOnDestroy(){
+    if(this.unsubscribe){
+      this.unsubscribe.unsubscribe();
+    }
   }
 }

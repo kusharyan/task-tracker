@@ -1,96 +1,45 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Task } from '../task-model/task.model';
+import { RTask, Task } from '../task-model/task.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TasksService {
-  // private tasks = new BehaviorSubject<Task[]>([]);
-  // tasks$ = this.tasks.asObservable();
+  private apiUrl = 'http://localhost:3000/api/tasks';
 
-  // private currentId = 0;
+  private fetchRequest = new Subject<void>();
+  fetchRequest$ = this.fetchRequest.asObservable();
 
-  // addTask(name: string, description: string) {
-  //   const newTask: Task = {
-  //     id: this.currentId++,
-  //     name,
-  //     description,
-  //     completed: false
-  //   };
-  //   this.tasks.next([...this.tasks.value, newTask]);
-  // }
+  requestFetch() {
+    this.fetchRequest.next();
+  }
 
-  // deleteTask(id: number) {
-  //   this.tasks.next(this.tasks.value.filter(t => t.id !== id));
-  // }
+  constructor(private http: HttpClient) {}
+  
+  loadTasks(): Observable<RTask[]> {
+    return this.http.get<RTask[]>(this.apiUrl);
+  }
 
-  // toggleTask(id: number) {
-  //   this.tasks.next(
-  //     this.tasks.value.map(t => t.id === id ? { ...t, completed: !t.completed } : t)
-  //   );
-  // }
+  addTask(task: Task): Observable<RTask> {
+    return this.http.post<RTask>(this.apiUrl, task);
+  }
 
-  // updateTask(id: number, name: string, description: string) {
-  //   this.tasks.next(
-  //     this.tasks.value.map(t => t.id === id ? { ...t, name, description } : t)
-  //   );
-  // }
+  updateTask(_id: string, task: RTask): Observable<RTask> {
+    return this.http.put<RTask>(`${this.apiUrl}/${_id}`, task);
+  }
 
-  private tasks = new BehaviorSubject<Task[]>(this.loadTasksFromStorage());
-  tasks$ = this.tasks.asObservable();
+  deleteTask(_id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${_id}`);
+  }
 
-  private currentId = this.getNextId();
-
-  constructor() {
-    this.tasks.subscribe((tasks) => {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+  toggleTask(_id: string, currentStatus: boolean, task: RTask){
+    return this.updateTask(_id, {
+      completed: currentStatus,
+      userId: task.userId,
+      name: task.name,
+      description: task.description
     });
-  }
-
-  addTask(name: string, description: string) {
-    const newTask: Task = {
-      id: this.currentId++,
-      name,
-      description,
-      completed: false,
-      userMail: this.getLocalUser(),
-    };
-    this.tasks.next([...this.tasks.value, newTask]);
-  }
-
-  deleteTask(id: number) {
-    this.tasks.next(this.tasks.value.filter((t) => t.id !== id));
-  }
-
-  toggleTask(id: number) {
-   this.tasks.next(
-      this.tasks.value.map(task =>
-        task.id === id ? { ...task, completed: true } : task
-      )
-    );
-  }
-
-  updateTask(id: number, name: string, description: string) {
-    this.tasks.next(
-      this.tasks.value.map((t) =>
-        t.id === id ? { ...t, name, description } : t
-      )
-    );
-  }
-
-  private loadTasksFromStorage(): Task[] {
-    const data = localStorage.getItem('tasks');
-    return data ? JSON.parse(data) : [];
-  }
-
-  private getNextId(): number {
-    const tasks = this.loadTasksFromStorage();
-    return tasks.length ? Math.max(...tasks.map((t) => t.id)) + 1 : 0;
-  }
-
-  getLocalUser() {
-    const userDets = JSON.parse(localStorage.getItem('user') || '');
-    return userDets.email;
   }
 }

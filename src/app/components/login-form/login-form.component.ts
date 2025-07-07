@@ -27,18 +27,20 @@ export class LoginFormComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(5)]]
     })
   }
 
   onSubmit() {
     if(this.loginForm.valid) {
       const {email, password} = this.loginForm.value;
-      this.loginSubscription = this.authService.login(this.loginForm.value).subscribe((success)=> {
-        if(success){
+      this.loginSubscription = this.authService.login(email, password).subscribe({
+        next: (res)=> {
+          this.authService.saveToken(res.token);
           this.router.navigate(['/layout'])
-        } else {
-          this.errorMessage = 'Invalid email or password!'
+        },
+        error: () => {
+          this.errorMessage = 'Invalid Login Credentials';
         }
       })
     }

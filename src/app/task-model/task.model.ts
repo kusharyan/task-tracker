@@ -1,7 +1,13 @@
 export interface Task {
-  id: number;
   name: string;
   description: string;
   completed: boolean;
-  userMail?: string;
+}
+
+export interface RTask{
+  _id?: string;
+  userId: string;
+  name: string;
+  description: string;
+  completed: boolean
 }

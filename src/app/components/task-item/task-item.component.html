@@ -37,8 +37,8 @@
     </div>
 
     <div *ngIf="isEditing" class="w-100">
-      <input [(ngModel)]="editedName" class="form-control mb-2" />
-      <input [(ngModel)]="editedDesc" class="form-control mb-2" />
+      <input [(ngModel)]="editedTaskName" class="form-control mb-2" />
+      <input [(ngModel)]="editedDescription" class="form-control mb-2" />
       <button class="btn btn-sm btn-success me-2" (click)="saveEdit()">
         Save
       </button>

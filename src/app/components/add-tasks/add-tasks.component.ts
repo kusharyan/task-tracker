@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TasksService } from '../../services/tasks.service';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-tasks',
@@ -11,9 +12,8 @@ import { CommonModule } from '@angular/common';
 })
 export class AddTasksComponent {
   taskForm: FormGroup;
-  // taskName = '';
-  // taskDescription = '';
-
+  private addTaskSub!: Subscription;
+  
   constructor(private taskService: TasksService, private fb: FormBuilder) {
     this.taskForm = this.fb.group({
       name: ['', Validators.required],
@@ -24,8 +24,21 @@ export class AddTasksComponent {
   addTask() {
     if (this.taskForm.valid) {
       const { name, description } = this.taskForm.value;
-      this.taskService.addTask(name, description);
+      console.log(this.taskForm.value);
+      this.addTaskSub = this.taskService.addTask({...this.taskForm.value, completed:false}).subscribe({
+        next: (data) => {
+          this.taskService.requestFetch(),
+          console.log(data);
+        },
+        error: (err)=> console.log(err)
+      });
       this.taskForm.reset();
+    }
+  }
+
+  ngOnDestroy(){
+    if(this.addTaskSub){
+      this.addTaskSub.unsubscribe();
     }
   }
 }
